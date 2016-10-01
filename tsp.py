@@ -26,3 +26,10 @@ print "Genetic Algo: \n"
 t = genetic_algo(d, N)
 print_tour(t, N)
 print cost_tour(t, d, N)
+
+"""
+print "\nRandom Path: \n"
+t = range(N)
+shuffle(t)
+print cost_tour(t, d, N)
+"""

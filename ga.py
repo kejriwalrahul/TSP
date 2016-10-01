@@ -1,16 +1,18 @@
 from random import shuffle, randint, random
 from numpy.random import choice
 from basic_functions import cost_tour
+from tsp_algos import greedy_tour
 
 # GA Parameters
-n = 100
-k = 50
-mutate_prob = 0.3
+n = 200
+k = 100
+mutate_prob = 0.4
 
 # Using path representation
 def initPopulation(dist, N):
 	pop = []
-	for i in range(n):
+	pop.append(greedy_tour(dist, N))
+	for i in range(n-1):
 		temp = range(N)
 		shuffle(temp)
 		pop.append(temp)
@@ -20,7 +22,7 @@ def initPopulation(dist, N):
 def getFitness(pop, dist, N):
 	fitness = []
 	for p in pop:
-		fitness.append(cost_tour(p, dist, N))
+		fitness.append(1.0/cost_tour(p, dist, N))
 
 	return fitness
 
@@ -95,11 +97,10 @@ def mutate(population):
 
 def optimizePopulation(original_population, derived_population, fitness, dist, N):
 	orig_sorted = [x for (y,x) in sorted(zip(fitness, original_population))]
-	derv_sorted = sorted(derived_population, key = lambda x: cost_tour(x, dist, N))
+	derv_sorted = sorted(derived_population, key = lambda x: -cost_tour(x, dist, N))
 
 	return derv_sorted[-k:] + orig_sorted[k:]
 
-"""
 def best(population, dist, N):
 	b = population[0]
 	min_cost = cost_tour(population[0], dist, N)
@@ -111,9 +112,7 @@ def best(population, dist, N):
 			min_cost, b = curr_cost, population[i]
 			mini = i
 
-	# print i
 	return b
-"""
 
 def genetic_algo(dist, N):
 	population = initPopulation(dist, N)
@@ -124,9 +123,10 @@ def genetic_algo(dist, N):
 		selected 	= selection(population, fitness)
 		offspring	= crossoverPopulation(selected)
 		mutated		= mutate(offspring)
+		# mutated		= offspring
 		optimalPop  = optimizePopulation(population, mutated, fitness, dist, N)
 
 		population = optimalPop
 
-	# return best(population, dist, N)
-	return population[-1]
+	return best(population, dist, N)
+	# return population[-1]
