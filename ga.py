@@ -3,9 +3,9 @@ from numpy.random import choice
 from basic_functions import cost_tour
 
 # GA Parameters
-n = 20
-k = 10
-mutate_prob = 0.1
+n = 100
+k = 50
+mutate_prob = 0.3
 
 # Using path representation
 def initPopulation(dist, N):
@@ -43,15 +43,11 @@ def crossover(p1, p2):
 	
 	split_1, split_2 = randint(0, maxlen-1), randint(0, maxlen-1)
 	while split_2 == split_1:
-		split_2 = randint(0, maxlen)
-
-	print split_1, split_2, 
+		split_2 = randint(0, maxlen-1)
+	split_1, split_2 = min(split_1, split_2), max(split_1, split_2)
 
 	c1, c2 = p1[:], p2[:]
-	split_1, split_2 = min(split_1, split_2), max(split_1, split_2)
 	
-	print split_1, split_2
-
 	map_1, map_2 = {}, {}
 	for i in range(split_1, split_2+1):
 		map_1[p1[i]] = p2[i]
@@ -78,9 +74,10 @@ def crossoverPopulation(population):
 # 2 city exchange
 def mutateTour(p):
 	maxlen = len(p)
-	split_1, split_2 = randint(0, maxlen), randint(0, maxlen)
+	split_1, split_2 = randint(0, maxlen-1), randint(0, maxlen-1)
 	while split_2 == split_1:
-		split_2 = randint(0, maxlen)	
+		split_2 = randint(0, maxlen-1)	
+	split_1, split_2 = min(split_1, split_2), max(split_1, split_2)
 
 	mid = p[split_1:split_2+1]
 	mid.reverse()
@@ -100,18 +97,23 @@ def optimizePopulation(original_population, derived_population, fitness, dist, N
 	orig_sorted = [x for (y,x) in sorted(zip(fitness, original_population))]
 	derv_sorted = sorted(derived_population, key = lambda x: cost_tour(x, dist, N))
 
-	return orig_sorted[k:] + derv_sorted[-k:]
+	return derv_sorted[-k:] + orig_sorted[k:]
 
-def best(population):
+"""
+def best(population, dist, N):
 	b = population[0]
-	min_cost = cost_tour(population[0])
+	min_cost = cost_tour(population[0], dist, N)
+	mini = 0
 	
 	for i in range(1, n):
-		curr_cost = cost_tour(population[i])
+		curr_cost = cost_tour(population[i], dist, N)
 		if curr_cost < min_cost:
 			min_cost, b = curr_cost, population[i]
+			mini = i
 
+	# print i
 	return b
+"""
 
 def genetic_algo(dist, N):
 	population = initPopulation(dist, N)
@@ -126,4 +128,5 @@ def genetic_algo(dist, N):
 
 		population = optimalPop
 
-	return best(population)
+	# return best(population, dist, N)
+	return population[-1]

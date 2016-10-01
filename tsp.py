@@ -24,5 +24,5 @@ print cost_tour(t, d, N)
 
 print "Genetic Algo: \n"
 t = genetic_algo(d, N)
-print_tour(t)
+print_tour(t, N)
 print cost_tour(t, d, N)
