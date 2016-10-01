@@ -23,4 +23,5 @@ def cost_tour(t, dist, N):
 
 def print_tour(t, N):
 	for i in range(N):
-		print t[i],
+		print t[i]
+	print
