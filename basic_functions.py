@@ -24,24 +24,3 @@ def cost_tour(t, dist, N):
 def print_tour(t, N):
 	for i in range(N):
 		print t[i],
-
-def print_tour2(t, N):
-	forw = t[0]
-	
-	print 1, 
-	curr = 0
-	for i in range(N-1):
-		print forw[curr] + 1
-		curr = forw[curr]
-
-def cost_tour2(t, dist, N):
-	cost = 0
-
-	forw = t[0]
-	curr = 0
-	for i in range(N-1):
-		cost += dist[curr][forw[curr]]
-		curr = forw[curr]
-	cost+= dist[curr][0]
-
-	return cost

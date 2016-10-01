@@ -29,8 +29,9 @@ def savings_heuristic(dist, N):
 	tours = []
 	# Create initial n-1 tours
 	for i in range(N-1):
-		tours.append(({0: i, i: 0}, {i: 0, 0: i}))
+		tours.append([0, i+1])
 
+	m, n = 0, 0
 	# Merge (n-2) tours 
 	for i in range(N-2):
 
@@ -46,88 +47,62 @@ def savings_heuristic(dist, N):
 				if tours[k] == None:
 					continue
 
-				curr_sav = dist[tours[j][0][0]][tours[k][0][0]] - dist[0][tours[j][0][0]] - dist[0][tours[k][0][0]]
+				curr_sav = dist[0][tours[j][1]]  + dist[0][tours[k][1]]  - dist[tours[j][1]][tours[k][1]]
 				if  curr_sav > maxs:
 					maxs = curr_sav
 					m, n = j, k
 					comb = 0
 
-				curr_sav = dist[tours[j][0][0]][tours[k][1][0]] - dist[0][tours[j][0][0]] - dist[0][tours[k][1][0]]
+				curr_sav = dist[0][tours[j][1]]  + dist[0][tours[k][-1]] - dist[tours[j][1]][tours[k][-1]]
 				if  curr_sav > maxs:
 					maxs = curr_sav
 					m, n = j, k
 					comb = 1
 
-				curr_sav = dist[tours[j][1][0]][tours[k][0][0]] - dist[0][tours[j][1][0]] - dist[0][tours[k][0][0]]
+				curr_sav = dist[0][tours[j][-1]] + dist[0][tours[k][1]]  - dist[tours[j][-1]][tours[k][1]]
 				if  curr_sav > maxs:
 					maxs = curr_sav
 					m, n = j, k
 					comb = 2
 
-				curr_sav = dist[tours[j][1][0]][tours[k][1][0]] - dist[0][tours[j][1][0]] - dist[0][tours[k][1][0]]
+				curr_sav = dist[0][tours[j][-1]] + dist[0][tours[k][-1]] - dist[tours[j][-1]][tours[k][-1]]
 				if  curr_sav > maxs:
 					maxs = curr_sav
 					m, n = j, k
 					comb = 3
 
+		if m == n:
+			print "\n?\n"
+			break
+
 		# merge tours
 		if comb == 0:
-			x, y = tours[m][0][0], tours[n][0][0]
-			# reverse forward and backward pointer maps
-			tours[m] = (tours[m][1], tours[m][0])
-
-			tours[m][0][x] 	= y
-			tours[m][1][0]	= tours[n][1][0]
-			tours[n][0][0]	= tours[m][0][0]
-			tours[n][1][y]  = x
-
-			tours[m][0].update(tours[n][0])
-			tours[m][1].update(tours[n][1])
+			tours[m].reverse()
+			tours[m] = [0] + tours[m][:-1] + tours[n][1:]
 			tours[n] = None
 		elif comb == 1:
-			x, y = tours[m][0][0], tours[n][1][0]
-			tours[n][0][y] 	= x
-			tours[n][1][0]	= tours[m][1][0]
-			tours[m][0][0]  = tours[n][n][0]
-			tours[m][1][x]  = y
-
-			tours[n][0].update(tours[m][0])
-			tours[n][1].update(tours[m][1])
-			tours[m] = tours[n]
+			tours[m] = tours[n] + tours[m][1:]
 			tours[n] = None
 		elif comb == 2:
-			x, y = tours[m][1][0], tours[n][0][0]
-			tours[m][0][x]  = y
-			tours[m][1][0]  = tours[n][1][0]
-			tours[n][0][0] 	= tours[m][0][0]
-			tours[n][1][y]	= x
-
-			tours[m][0].update(tours[n][0])
-			tours[m][1].update(tours[n][1])
+			tours[m] = tours[m] + tours[n][1:]
 			tours[n] = None
 		else:
-			x, y = tours[m][1][0], tours[n][1][0]
-			# reverse forward and backward pointer maps
-			tours[n] = (tours[n][1], tours[n][0])
-
-			tours[m][0][x] 	= y
-			tours[m][1][0]	= tours[n][1][0]
-			tours[n][0][0]	= tours[m][0][0]
-			tours[n][1][y]  = x
-
-			tours[m][0].update(tours[n][0])
-			tours[m][1].update(tours[n][1])
+			tours[n].reverse()
+			tours[m] = tours[m] + tours[n][:-1]
 			tours[n] = None		
 
-	return tours[0]
+	return tours[m]
 
 # Begin Main:
 N, c, d = read_inp('problems/euc_100')
-t = greedy_tour(d, N)
 
+print "Nearest Neighbour: \n"
+t = greedy_tour(d, N)
 print_tour(t, N)
 print cost_tour(t, d, N)
 
+
+print "\n\nSaving Heuristic: \n"
 t = savings_heuristic(d, N)
-print_tour2(t, N)
-print cost_tour2(t, d, N)
+print_tour(t, N)
+print cost_tour(t, d, N)
