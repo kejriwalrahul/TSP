@@ -23,5 +23,42 @@ def cost_tour(t, dist, N):
 
 def print_tour(t, N):
 	for i in range(N):
-		print t[i]
+		print t[i],
 	print
+
+def check_valid_tour(t, N):
+	seen = [0]*N
+	for i in range(N):
+		if seen[t[i]-1] == 1:
+			print "Seen: ", t[i]
+		else:
+			seen[t[i]-1] = 1
+
+	flag = 0
+	for i in range(N):
+		if seen[i] == 0:
+			print "Unseen:", i+1
+			flag = 1
+	
+	if flag == 0:
+		return True
+	else: 
+		return False
+
+def check_valid_tour2(t, N):
+	seen = [0]*N
+	for i in range(N):
+		seen[t[i]-1] = 1
+
+	flag = 0
+	for i in range(N):
+		if seen[i] == 0:
+			return False
+	return True
+
+def check_pop(pop, N, i):
+	for p in pop:
+		if not check_valid_tour2(p, N):
+			print "Failed ", i
+			return False
+	return True

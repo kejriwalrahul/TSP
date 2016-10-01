@@ -1,5 +1,6 @@
 from random import randint
 from basic_functions import cost_tour
+
 # Basic greedy algo starting from city 1, and adding closest city to hanging node in partial tour
 def greedy_tour(dist, N):
 	tour    = [ 1 ]

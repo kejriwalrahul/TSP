@@ -9,12 +9,12 @@ from sa import sa
 # Begin Main:
 N, c, d = read_inp('problems/euc_250')
 
-"""
-print "Nearest Neighbour: \n"
+
+print "Nearest Neighbour:"
 t = greedy_tour(d, N)
-print_tour(t, N)
+# print_tour(t, N)
 print cost_tour(t, d, N)
-"""
+
 
 """
 print "\n\nSaving Heuristic: \n"
@@ -23,12 +23,17 @@ print_tour(t, N)
 print cost_tour(t, d, N)
 """
 
-"""
-print "Genetic Algo: \n"
+
+print "Genetic Algo:"
 t = genetic_algo(d, N)
-print_tour(t, N)
-print cost_tour(t, d, N)
-"""
+if(check_valid_tour(t, N)):
+	print "Passed tour"
+	# print_tour(t, N)
+	print cost_tour(t, d, N)
+else:
+	print "Failed tour"
+	# print_tour(t, N)
+
 
 """
 print "\nRandom Path: \n"
@@ -37,9 +42,15 @@ shuffle(t)
 print cost_tour(t, d, N)
 """
 
-
-print "Simulated Annealing: \n"
+"""
+print "Simulated Annealing:"
 sTour = greedy_tour(d, N)
 t = sa(sTour, 10, 2.4, 1000, get_random_neighbour(d,1), get_deltaE(d), get_nextTemp(.5))
-print_tour(t, N)
-print cost_tour(t, d, N)
+if(check_valid_tour(t, N)):
+	print "Passed tour"
+	# print_tour(t, N)
+	print cost_tour(t, d, N)
+else:
+	print "Failed tour"
+	# print_tour(t, N)
+"""

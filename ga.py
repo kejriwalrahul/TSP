@@ -2,18 +2,22 @@ from random import shuffle, randint, random
 from numpy.random import choice
 from basic_functions import cost_tour
 from tsp_algos import greedy_tour
+from sa import sa
 
 # GA Parameters
 n = 200
 k = 100
 mutate_prob = 0.4
+num_iter = 250
 
 # Using path representation
 def initPopulation(dist, N):
 	pop = []
 	pop.append(greedy_tour(dist, N))
-	for i in range(n-1):
-		temp = range(N)
+	pop.append(greedy_tour(dist, N))
+	pop.append(greedy_tour(dist, N))
+	for i in range(n-3):
+		temp = range(1, N+1)
 		shuffle(temp)
 		pop.append(temp)
 
@@ -39,25 +43,35 @@ def selection(population, fitness):
 
 	return selected
 
+def get_alt(m, hashmap):
+	while True:
+		if m not in hashmap:
+			break
+		m = hashmap[m]
+	return m
+
 # partially mapped crossover
 def crossover(p1, p2):
 	maxlen = len(p1)
 	
 	split_1, split_2 = randint(0, maxlen-1), randint(0, maxlen-1)
-	while split_2 == split_1:
-		split_2 = randint(0, maxlen-1)
+	# while split_2 == split_1:
+	# 	split_2 = randint(0, maxlen-1)
 	split_1, split_2 = min(split_1, split_2), max(split_1, split_2)
 
-	c1, c2 = p1[:], p2[:]
-	
+	# c1, c2 = p1[:], p2[:]
+	c1, c2 = [None]*maxlen, [None]*maxlen
+	c1[split_1:split_2+1] = p1[split_1:split_2+1] 
+	c2[split_1:split_2+1] = p2[split_1:split_2+1] 
+
 	map_1, map_2 = {}, {}
 	for i in range(split_1, split_2+1):
 		map_1[p1[i]] = p2[i]
 		map_2[p2[i]] = p1[i]
 
 	for i in range(split_1) + range(split_2+1, maxlen):
-		c1[i] = p2[i] if p2[i] not in map_1 else map_1[p2[i]] 
-		c2[i] = p1[i] if p1[i] not in map_2 else map_2[p1[i]] 
+		c1[i] = get_alt(p2[i], map_1)
+		c2[i] = get_alt(p1[i], map_2)
 
 	return [c1, c2]
 
@@ -118,14 +132,13 @@ def genetic_algo(dist, N):
 	population = initPopulation(dist, N)
 
 	# Fixed no of iterations
-	for i in range(100):
+	for i in range(num_iter):
 		fitness 	= getFitness(population, dist, N)
 		selected 	= selection(population, fitness)
 		offspring	= crossoverPopulation(selected)
 		mutated		= mutate(offspring)
 		# mutated		= offspring
 		optimalPop  = optimizePopulation(population, mutated, fitness, dist, N)
-
 		population = optimalPop
 
 	return best(population, dist, N)
