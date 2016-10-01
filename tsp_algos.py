@@ -10,8 +10,8 @@ def greedy_tour(dist, N):
 		minc = None
 		for j in range(N):
 			if j not in visited:
-				if dist[i][j] < mind:
-					mind = dist[i][j]
+				if dist[curr][j] < mind:
+					mind = dist[curr][j]
 					minc = j
 
 		tour.append(minc+1)
