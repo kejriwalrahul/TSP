@@ -1,3 +1,5 @@
+from random import randint
+from basic_functions import cost_tour
 # Basic greedy algo starting from city 1, and adding closest city to hanging node in partial tour
 def greedy_tour(dist, N):
 	tour    = [ 1 ]
@@ -84,3 +86,57 @@ def savings_heuristic(dist, N):
 			tours[n] = None		
 
 	return tours[m]
+
+# Use a 2-opt move to generate a random_neighbour
+def get_random_neighbour(dist, sel):
+	def random_neighbour(cTour):
+		l=len(cTour)
+		e1=randint(1,l-2)
+		e2=randint(e1+1,l-1)
+		dup=cTour[e1:e2]
+		dup.reverse()
+		return cTour[:e1] + dup + cTour[e2:]
+	def max2_neighbour(cTour):
+		e1, e2 = max2(cTour, dist)
+		dup=cTour[e1+1:e2+1]
+		dup.reverse()
+		return cTour[:e1+1] + dup + cTour[e2+1:]
+	if sel==1:
+		return random_neighbour
+	elif sel==2:
+		return max2_neighbour
+
+# Difference in eval
+def get_deltaE(dist):
+	def deltaE(nTour, cTour):
+		ce = cost_tour(cTour, dist, len(cTour))
+		ne = cost_tour(nTour, dist, len(nTour))
+		return ce - ne
+	return deltaE
+
+def get_nextTemp(f):
+	def nextTemp(cTemp):
+		return cTemp * f
+	return nextTemp
+
+def max2(t, d):
+	n=len(t)
+	e=[]
+	for i in range(n-1):
+		e.append(d[i][i+1])
+	maxd=-1
+	maxi=None
+	m1=None
+	m2=None
+	for i in range(n-1):
+		if(e[i]>maxd):
+			maxd=e[i]
+			maxi=i
+	m1=i
+	maxd=e[i]=-1
+	for i in range(n-1):
+		if(e[i]>maxd):
+			maxd=e[i]
+			maxi=i
+	m2=i
+	return m1, m2
