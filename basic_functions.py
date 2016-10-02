@@ -1,5 +1,21 @@
+from sys import stdin
 def read_inp(file):
 	f    = open(file, "r")
+	type = f.readline()
+	N 	 = int(f.readline())
+
+	coords = []
+	for i in range(N):
+		coords.append([float(i) for i in f.readline().split(' ')])
+
+	dist = []
+	for i in range(N):
+		dist.append([float(i) for i in f.readline().split(' ')])
+
+	return N, coords, dist
+
+def read_inp_stdin():
+	f = stdin
 	type = f.readline()
 	N 	 = int(f.readline())
 

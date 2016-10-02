@@ -1,14 +1,16 @@
 from random import shuffle, randint, random
 from numpy.random import choice
-from basic_functions import cost_tour
+from basic_functions import cost_tour, print_tour
 from tsp_algos import greedy_tour
 from sa import sa
+# for flushing stdout
+from sys import stdout
 
 # GA Parameters
 n = 200
 k = 100
 mutate_prob = 0.4
-num_iter = 250
+num_iter = 1000
 
 # Using path representation
 def initPopulation(dist, N):
@@ -131,15 +133,21 @@ def best(population, dist, N):
 def genetic_algo(dist, N):
 	population = initPopulation(dist, N)
 
-	# Fixed no of iterations
-	for i in range(num_iter):
-		fitness 	= getFitness(population, dist, N)
-		selected 	= selection(population, fitness)
-		offspring	= crossoverPopulation(selected)
-		mutated		= mutate(offspring)
-		# mutated		= offspring
-		optimalPop  = optimizePopulation(population, mutated, fitness, dist, N)
-		population = optimalPop
+	# Loop indefinitely, for submission.
+	while True:
+		# Fixed no of iterations
+		for i in range(num_iter):
+			fitness 	= getFitness(population, dist, N)
+			selected 	= selection(population, fitness)
+			offspring	= crossoverPopulation(selected)
+			mutated		= mutate(offspring)
+			# mutated		= offspring
+			optimalPop  = optimizePopulation(population, mutated, fitness, dist, N)
+			population = optimalPop
+			
+			# print the best tour:
+			print_tour(best(population, dist, N), N)
+			stdout.flush()
 
 	return best(population, dist, N)
 	# return population[-1]
