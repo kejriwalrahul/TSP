@@ -1,4 +1,6 @@
 from sys import stdin
+import matplotlib.pyplot as plt
+
 def read_inp(file):
 	f    = open(file, "r")
 	type = f.readline()
@@ -78,3 +80,12 @@ def check_pop(pop, N, i):
 			print "Failed ", i
 			return False
 	return True
+
+def show_tour(t, c):
+	x, y = [], []
+	for i in t:
+		x.append(c[i-1][0])
+		y.append(c[i-1][1])
+
+	plt.plot(x, y)
+	plt.show()

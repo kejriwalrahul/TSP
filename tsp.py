@@ -31,6 +31,7 @@ t = genetic_algo(d, N)
 # 	print "Passed tour"
 # 	# print_tour(t, N)
 # 	print cost_tour(t, d, N)
+# 	show_tour(t,c)
 # else:
 # 	print "Failed tour"
 # 	print_tour(t, N)

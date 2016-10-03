@@ -1,6 +1,6 @@
 from random import shuffle, randint, random
 from numpy.random import choice
-from basic_functions import cost_tour, print_tour
+from basic_functions import cost_tour, print_tour, show_tour
 from tsp_algos import greedy_tour
 from sa import sa
 # for flushing stdout
