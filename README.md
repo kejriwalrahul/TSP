@@ -1,4 +1,4 @@
 # TSP
 Travelling Salesman Problem Algos
 
-Tried NearestNegihbor, Savings Heuristic
+Implemented and tried NearestNegihbor, Savings Heuristic, Genetic Algorithms, Simulated Annealing

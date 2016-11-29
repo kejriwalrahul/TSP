@@ -101,6 +101,16 @@ def mutateTour(p):
 	mid.reverse()
 	return p[:split_1] + mid + p[split_2+1:]
 
+def unravel_tour(t, d):
+	n = len(t)
+	for i in range(n-1):
+		for j in range(i+2, n-1):
+			if d[t[i]-1][t[i+1]-1] + d[t[j]-1][t[j+1]-1] > d[t[i]-1][t[j]-1] + d[t[i+1]-1][t[j+1]-1]:
+				temp = t[i+1:j+1]
+				temp.reverse()
+				return t[:i+1] + temp + t[j+1:]
+	return t
+
 def mutate(population):
 	mutation = []
 	for p in population: 
@@ -144,9 +154,13 @@ def genetic_algo(dist, N):
 			# mutated		= offspring
 			optimalPop  = optimizePopulation(population, mutated, fitness, dist, N)
 			population = optimalPop
-			
+
+			# unraveled = unravel_tour(population[-1], dist)
+			# population[0] = unraveled
+
 			# print the best tour:
-			print_tour(best(population, dist, N), N)
+			# print_tour(best(population, dist, N), N)
+			print cost_tour(best(population, dist, N), dist, N)
 			stdout.flush()
 
 	return best(population, dist, N)
